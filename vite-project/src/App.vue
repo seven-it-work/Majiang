@@ -25,15 +25,13 @@ const configFans = [
     new ConfigFan(FanType.YI_TIAO_LONG, true, 2),
     new ConfigFan(FanType.XIAO_QI_DUI, true, 2)
 ]
-const shoupai: number[] = [2, 2, 3, 3, 3, 5, 6];
+const shoupai: number[] = [2, 12, 3, 13, 3, 5, 16];
 const pengs = [new Peng([5, 5, 5])];
 const gangs = [new Gang([11, 11, 11, 11])];
 const allshoupai: Allshoupai = new Allshoupai(shoupai, pengs, gangs, 2);
 
 var sichuanFan = new SichuanFan();
 console.log(sichuanFan.findFan(allshoupai, configFans).totalFans);
-
-
 
 const tingpai:Tingpai = new SichuanTingpai();
 console.log(tingpai.tingPais(shoupai).getTingPais());
