@@ -10,18 +10,20 @@ import static junit.framework.TestCase.assertEquals;
 
 /**
  * 四川麻将听牌算法测试
+ *
  * @author Henry Zhou
  */
 public class SichuanTingpaiTest {
     @Test
     public void tingpaiTest01_1() {
         List<Integer> shoupai = Arrays.asList(
-                1,2,3,4,4,4,5,6,7,8,9,9,9
+                1, 2, 3, 4, 4, 4, 5, 6, 7, 8
         );
         Tingpai tingpai = new SichuanTingpai();
         AllTingpai allTingpai = tingpai.tingPais(shoupai);
         System.out.println(allTingpai.getTingPais());
     }
+
     @Test
     public void tingpaiTest01() {
         List<Integer> shoupai = Arrays.asList(
