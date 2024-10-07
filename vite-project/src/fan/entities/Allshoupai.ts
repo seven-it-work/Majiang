@@ -1,5 +1,5 @@
-import Peng from "./Peng.ts";
-import Gang from "./Gang.ts";
+import {Peng} from "./Peng.ts";
+import {Gang} from "./Gang.ts";
 
 /**
  * 所有手牌类（包含已经胡的牌）
@@ -7,10 +7,10 @@ import Gang from "./Gang.ts";
  * @author Henry Zhou
  */
 export class Allshoupai {
-     shoupai: number[] = []; // 手牌
-     pengs: Peng[] = []; // 已经碰的牌
-     gangs: Gang[] = []; // 已经杠的牌
-     hued: number = -1; // 已经胡的牌
+    shoupai: number[] = []; // 手牌
+    pengs: Peng[] = []; // 已经碰的牌
+    gangs: Gang[] = []; // 已经杠的牌
+    hued: number = -1; // 已经胡的牌
 
     constructor(shoupai: number[] = [], pengs: Peng[] = [], gangs: Gang[] = [], hued: number = -1) {
         this.shoupai = shoupai;
@@ -18,7 +18,6 @@ export class Allshoupai {
         this.gangs = gangs;
         this.hued = hued;
     }
-
 
 
     /**
@@ -50,9 +49,9 @@ export class Allshoupai {
      */
     public findShoupaiExceptJiang(): number[] {
         const shouPaiCopy = [...this.shoupai];
-        const groups = shouPaiCopy.reduce((acc:any, val) => {
+        const groups = shouPaiCopy.reduce((acc: any, val) => {
             if (!acc[val]) {
-                acc[val] = { count: 0 };
+                acc[val] = {count: 0};
             }
             acc[val].count++;
             return acc;

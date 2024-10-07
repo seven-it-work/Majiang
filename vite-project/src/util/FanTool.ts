@@ -1,6 +1,6 @@
 import {PaiType} from "../tingPai/PaiType.ts";
 import {Allshoupai} from "../fan/entities/Allshoupai.ts";
-import Gang from "../fan/entities/Gang.ts";
+import {Gang} from "../fan/entities/Gang.ts";
 import {tiao, tong, wan} from "../tingPai/Tingpai.ts";
 import {SichuanTingpai} from "../tingPai/SichuanTingpai.ts";
 
@@ -80,7 +80,7 @@ export class FanTool {
         for (const singleDistinctPai of distinctShoupai) {
             const gangPre = allpais.filter(singlePai => singlePai === singleDistinctPai);
             if (gangPre.length === 4) {
-                const gang = new Gang(gangPre);
+                const gang:Gang = {singGangs:gangPre};
                 gangs.push(gang);
             }
         }

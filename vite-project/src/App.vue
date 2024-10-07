@@ -6,10 +6,13 @@ import {Tingpai} from "./tingPai/Tingpai.ts";
 import {AllTingpai} from "./tingPai/entities/AllTingpai.ts";
 import ConfigFan from "./fan/ConfigFan.ts";
 import {FanType} from "./fan/enumType/FanType.ts";
-import Peng from "./fan/entities/Peng.ts";
-import Gang from "./fan/entities/Gang.ts";
+import {Gang} from "./fan/entities/Gang.ts";
 import {Allshoupai} from "./fan/entities/Allshoupai.ts";
 import {SichuanFan} from "./fan/SichuanFan.ts";
+import {Peng} from "./fan/entities/Peng.ts";
+import {GameInformation} from "./objs/GameInformation.ts";
+import {Player} from "./objs/Player.ts";
+import {Rookie} from "./ai/Rookie.ts";
 
 
 const configFans = [
@@ -26,15 +29,22 @@ const configFans = [
     new ConfigFan(FanType.XIAO_QI_DUI, true, 2)
 ]
 const shoupai: number[] = [2, 12, 3, 13, 3, 5, 16];
-const pengs = [new Peng([5, 5, 5])];
-const gangs = [new Gang([11, 11, 11, 11])];
+const pengs: Peng[] = [{singPengs: [5, 5, 5]}];
+const gangs:Gang[] = [{singGangs:[11, 11, 11, 11]}];
 const allshoupai: Allshoupai = new Allshoupai(shoupai, pengs, gangs, 2);
 
 var sichuanFan = new SichuanFan();
 console.log(sichuanFan.findFan(allshoupai, configFans).totalFans);
 
-const tingpai:Tingpai = new SichuanTingpai();
+const tingpai: Tingpai = new SichuanTingpai();
 console.log(tingpai.tingPais(shoupai).getTingPais());
+
+const playerList = [new Rookie("玩家1"), new Rookie("玩家2"), new Rookie("玩家3"), new Rookie("玩家4"),]
+var gameInformation = new GameInformation();
+gameInformation.doStart(playerList)
+for (let i = 0; i < 100; i++) {
+    gameInformation.doNext()
+}
 </script>
 
 <template>

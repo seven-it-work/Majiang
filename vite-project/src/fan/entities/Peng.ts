@@ -1,7 +1,4 @@
-export default class {
-    singPengs: number[] = [];
+export interface Peng {
+    singPengs: number[];
 
-    constructor(singPengs: number[]) {
-        this.singPengs = singPengs;
-    }
 }
