@@ -41,10 +41,10 @@ export class Player {
     /**
      * 定缺
      */
-    judgeTheLackOfCards() {
+    async judgeTheLackOfCards() {
     }
 
-    doAction() {
+    async doAction() {
         this.drawShoupai = [...this.shoupai, this.currentCard].filter(item => item != undefined)
     }
 
@@ -73,10 +73,10 @@ export class Player {
     /**
      * 出牌，将牌放入出牌区
      */
-    discardOneCard(card: number) {
+    async discardOneCard(card: number) {
         console.log(`${this.name}打出了${getCardStr(card)}`)
         this.cardsPlayed.push(card)
-        this.gameInformation?.discardCard(this, card)
+        await this.gameInformation?.discardCard(this, card)
     }
 
     checkIsHuPai(card: number): boolean {
@@ -90,24 +90,36 @@ export class Player {
         return this.shoupai.filter(item => item === card).length === 3;
     }
 
-    doGang(card: number) {
+    async doGang(card: number) {
         if (this.checkIsGang(card)) {
+            console.log(`${this.name}杠牌`)
             this.shoupai = this.shoupai.filter(item => item !== card)
             this.gangs.push({singGangs: [card, card, card, card]})
+            return true;
         }
+        return false;
+    }
+
+    async doHupai() {
+        console.log(`${this.name}胡牌了`)
+        this.hupai = true;
+        return true;
     }
 
     checkIsPeng(card: number): boolean {
         return this.shoupai.filter(item => item === card).length === 2;
     }
 
-    doPeng(card: number) {
+    async doPeng(card: number) {
         if (this.checkIsPeng(card)) {
+            console.log(`${this.name}碰牌`)
             for (let i = 0; i < 2; i++) {
                 this.removeInShouPai(card);
             }
             this.pengs.push({singPengs: [card, card, card]})
+            return true;
         }
+        return false;
     }
 
     /**

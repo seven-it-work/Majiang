@@ -14,36 +14,44 @@ export class GameInformation {
     // 当前进行的player
     currentPlayerIndex: number = 0;
 
-    discardCard(player: Player, card: number) {
-        this.playerList
+
+    getCurrentPlayer(): Player {
+        return this.playerList[this.currentPlayerIndex];
+    }
+
+    async discardCard(player: Player, card: number) {
+        await Promise.all(this.playerList
             .filter(item => item.id !== player.id)
-            .forEach(async (item) => {
+            .map(async (item) => {
                 // 检测是否胡牌
                 if (item.checkIsHuPai(card)) {
-                    console.log(`${item.name}胡牌了`)
-                    item.hupai = true;
-                    this.currentPlayerIndex = this.playerList.map(p => p.id).findIndex(id => id === item.id)
-                    return
+                    const b = await item.doHupai();
+                    if (b) {
+                        this.currentPlayerIndex = this.playerList.map(p => p.id).findIndex(id => id === this.id)
+                        return
+                    }
                 }
                 // 检测是否杠
                 if (item.checkIsHuPai(card)) {
-                    console.log(`${item.name}杠牌`)
-                    item.doGang(card);
-                    // 改变索引
-                    this.currentPlayerIndex = this.playerList.map(p => p.id).findIndex(id => id === item.id)
-                    await this.doNext();
-                    return
+                    const b = await item.doGang(card);
+                    if (b) {
+                        // 改变索引
+                        this.currentPlayerIndex = this.playerList.map(p => p.id).findIndex(id => id === item.id)
+                        await this.doNext();
+                        return
+                    }
                 }
                 // 检测是否碰
                 if (item.checkIsPeng(card)) {
-                    console.log(`${item.name}碰牌`)
-                    item.doPeng(card)
-                    // 出牌
-                    this.currentPlayerIndex = this.playerList.map(p => p.id).findIndex(id => id === item.id)
-                    item.doAction();
-                    return
+                    const b = await item.doPeng(card)
+                    if (b) {
+                        // 出牌
+                        this.currentPlayerIndex = this.playerList.map(p => p.id).findIndex(id => id === item.id)
+                        await item.doAction();
+                        return
+                    }
                 }
-            })
+            }))
     }
 
     constructor() {
@@ -82,20 +90,20 @@ export class GameInformation {
         // 第一个人开始摸牌
         this.playerList[0].drawCard(this.takeOneCard());
         // 定缺
-        this.playerList.forEach(player => {
+        await Promise.all(this.playerList.map(async (player: Player) => {
             if (player.isAi) {
-                player.judgeTheLackOfCards();
+                await player.judgeTheLackOfCards();
+            } else {
+                await player.judgeTheLackOfCards();
             }
-        })
+            return Promise.resolve();
+        }));
+        console.log("定缺完成")
         // 第一个人开始出牌
-        // 如果是ai，调用ai的出牌方法
-        if (this.playerList[0].isAi) {
-            this.playerList[0].doAction();
-            this.currentPlayerIndex++;
-        } else {
-            // 玩家出牌
-        }
+        // await this.playerList[0].doAction();
+        // this.currentPlayerIndex++;
     }
+
 
     async doNext() {
         const player = this.playerList[this.currentPlayerIndex];
@@ -105,13 +113,9 @@ export class GameInformation {
             return
         }
         player.drawCard(this.takeOneCard())
-        if (player.isAi) {
-            player.doAction();
-            this.currentPlayerIndex++;
-            this.currentPlayerIndex = this.currentPlayerIndex % 4;
-        } else {
-            // 玩家执行
-        }
+        await player.doAction();
+        this.currentPlayerIndex++;
+        this.currentPlayerIndex = this.currentPlayerIndex % 4;
     }
 
 
@@ -142,7 +146,7 @@ export class GameInformation {
      * 判断是否没有牌了
      * @private
      */
-    private isNoCard(): boolean {
+     isNoCard(): boolean {
         return this.currentIndex >= this.allPai.length;
     }
 }

@@ -10,7 +10,7 @@ export class Rookie extends Player {
     /**
      * 判断缺牌
      */
-    judgeTheLackOfCards() {
+    async judgeTheLackOfCards() {
         const countObj = [
             {type: PaiType.TONG, count: getCardListByType(this.drawShoupai, PaiType.TONG).length,},
             {type: PaiType.TIAO, count: getCardListByType(this.drawShoupai, PaiType.TIAO).length,},
@@ -30,15 +30,15 @@ export class Rookie extends Player {
     }
 
 
-    doAction() {
-        super.doAction()
+    async doAction() {
+        await super.doAction()
         // 系统已经给你发完牌了
         if (this.notNeedType === undefined) {
             throw new Error("初始化错误，请检查")
         }
         // 先打出缺的牌
         if (this.currentCard && getCardType(this.currentCard) === this.notNeedType) {
-            this.discardOneCard(this.currentCard);
+            await this.discardOneCard(this.currentCard);
             this.currentCard = undefined;
             this.endRound()
             return;
@@ -48,7 +48,7 @@ export class Rookie extends Player {
             // 随机选中一个出牌
             const card = lodash.sample(cardListByType);
             if (card) {
-                this.discardOneCard(card);
+                await this.discardOneCard(card);
                 // 从手牌中移除
                 this.removeInShouPai(card);
                 // 结束回合
@@ -83,7 +83,7 @@ export class Rookie extends Player {
                 }
             }
             const card = this.removeInShouPai(this.drawShoupai[maxIndex]);
-            this.discardOneCard(card)
+            await this.discardOneCard(card)
             // 初始化听牌
             this.tingCardInit()
             this.endRound()
@@ -110,7 +110,7 @@ export class Rookie extends Player {
             if (card) {
                 // 从手牌中移除
                 card = this.removeInShouPai(card);
-                this.discardOneCard(card);
+                await  this.discardOneCard(card);
                 // 结束回合
                 this.endRound();
                 return
@@ -121,7 +121,7 @@ export class Rookie extends Player {
         if (card) {
             // 从手牌中移除
             card = this.removeInShouPai(card);
-            this.discardOneCard(card);
+            await this.discardOneCard(card);
             // 结束回合
             this.endRound();
             return
@@ -131,7 +131,7 @@ export class Rookie extends Player {
         if (card) {
             // 从手牌中移除
             card = this.removeInShouPai(card);
-            this.discardOneCard(card);
+            await this.discardOneCard(card);
             // 结束回合
             this.endRound();
             return
