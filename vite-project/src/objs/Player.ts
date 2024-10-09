@@ -4,7 +4,7 @@ import {PaiType} from "../tingPai/PaiType.ts";
 import lodash from "lodash";
 import {Tingpai} from "../tingPai/Tingpai.ts";
 import {SichuanTingpai} from "../tingPai/SichuanTingpai.ts";
-import {getCardListStr, getCardStr} from "../util/CardUtils.ts";
+import {getCardListByType, getCardListStr, getCardStr, getCardType} from "../util/CardUtils.ts";
 import {GameInformation} from "./GameInformation.ts";
 
 export class Player {
@@ -36,15 +36,130 @@ export class Player {
     tingCard: number[] = [];
     tingpai: Tingpai = new SichuanTingpai()
     isAi: boolean = false;
-    hupai: boolean = false;
+    isHupai: boolean = false;
+    countObj: {
+        "TONG": number,
+        "TIAO": number,
+        "WAN": number,
+    } = {
+        "TONG": 0,
+        "TIAO": 0,
+        "WAN": 0,
+    }
+
+    /**
+     * 胡牌策略
+     */
+    // @ts-ignore
+    hupaiAction(card: number): boolean {
+        return false;
+    }
+
+    /**
+     * 胡牌
+     */
+    hupai(card: number): boolean {
+        if (this.hupaiAction(card)) {
+            console.log(`${this.name}胡牌：${card}`)
+            this.isHupai = true
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 出牌前判断
+     * 如果有 杠、自摸则返回true
+     */
+    judgeBeforeYouPlayYourCards(): boolean {
+        return !!this.currentCard && (this.checkIsHuPai(this.currentCard) || this.checkIsGang(this.currentCard));
+    }
+
+    /**
+     * 杠牌策略
+     */
+    // @ts-ignore
+    gangAction(card: number): boolean {
+        return false;
+    }
+
+    /**
+     * 杠牌
+     */
+    gang(card: number): boolean {
+        if (this.gangAction(card)) {
+            console.log(`${this.name}杠牌：${card}`)
+            this.shoupai = this.shoupai.filter(item => item !== card)
+            this.gangs.push({singGangs: [card, card, card, card]})
+            if (this.currentCard === card) {
+                this.currentCard = undefined;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 碰牌策略
+     */
+    // @ts-ignore
+    pengAction(card: number): boolean {
+        return false;
+    }
+
+    /**
+     * 碰牌策略
+     */
+    peng(card: number): boolean {
+        if (this.pengAction(card)) {
+            console.log(`${this.name}碰牌：${card}`)
+            for (let i = 0; i < 2; i++) {
+                this.removeInShouPai(card);
+            }
+            this.pengs.push({singPengs: [card, card, card]})
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 出牌策略
+     */
+    playCardAction(): number {
+        return -1;
+    }
+
+
+    /**
+     * 出牌
+     */
+    playCard(): number {
+        // 出牌将移除mapCount
+        const number = this.playCardAction();
+        this.countObj[getCardType(number)] = this.countObj[getCardType(number)] - 1;
+        return number;
+    }
+
+    /**
+     * 定缺策略
+     */
+    judgeNotNeedCardAction() {
+    }
 
     /**
      * 定缺
      */
-    async judgeTheLackOfCards() {
+    judgeNotNeedCard() {
+        // 初始化mapCount
+        this.countObj = {
+            "TONG": getCardListByType(this.drawShoupai, PaiType.TONG).length,
+            "TIAO": getCardListByType(this.drawShoupai, PaiType.TIAO).length,
+            "WAN": getCardListByType(this.drawShoupai, PaiType.WAN).length,
+        }
+        this.judgeNotNeedCardAction();
     }
 
-    async doAction() {
+    initDrawShouPai() {
         this.drawShoupai = [...this.shoupai, this.currentCard].filter(item => item != undefined)
     }
 
@@ -55,6 +170,8 @@ export class Player {
     drawCard(card: number) {
         console.log(`${this.name}抽到了${getCardStr(card)}，当前手牌${this.getShouPaiStr()}`)
         this.currentCard = card;
+        // 每次抽牌都对countMap进行维护
+        this.countObj[getCardType(card)] = this.countObj[getCardType(card)] + 1;
     }
 
     tingCardInit() {
@@ -68,15 +185,21 @@ export class Player {
     isTingCard(): boolean {
         return this.tingCard.length > 0
     }
-
+    /**
+     * 自摸
+     */
+    checkIsSelfWin(): boolean {
+        if (this.isTingCard() && this.currentCard) {
+            return this.tingCard.includes(this.currentCard)
+        }
+        return false;
+    }
 
     /**
-     * 出牌，将牌放入出牌区
+     * 原始杠牌
      */
-    async discardOneCard(card: number) {
-        console.log(`${this.name}打出了${getCardStr(card)}`)
-        this.cardsPlayed.push(card)
-        await this.gameInformation?.discardCard(this, card)
+    checkIsSelfGang(): boolean {
+        return this.shoupai.filter(item => item === this.currentCard).length === 3;
     }
 
     checkIsHuPai(card: number): boolean {
@@ -90,42 +213,16 @@ export class Player {
         return this.shoupai.filter(item => item === card).length === 3;
     }
 
-    async doGang(card: number) {
-        if (this.checkIsGang(card)) {
-            console.log(`${this.name}杠牌`)
-            this.shoupai = this.shoupai.filter(item => item !== card)
-            this.gangs.push({singGangs: [card, card, card, card]})
-            return true;
-        }
-        return false;
-    }
-
-    async doHupai() {
-        console.log(`${this.name}胡牌了`)
-        this.hupai = true;
-        return true;
-    }
 
     checkIsPeng(card: number): boolean {
         return this.shoupai.filter(item => item === card).length === 2;
-    }
-
-    async doPeng(card: number) {
-        if (this.checkIsPeng(card)) {
-            console.log(`${this.name}碰牌`)
-            for (let i = 0; i < 2; i++) {
-                this.removeInShouPai(card);
-            }
-            this.pengs.push({singPengs: [card, card, card]})
-            return true;
-        }
-        return false;
     }
 
     /**
      * 从手牌中移除
      */
     removeInShouPai(card: number) {
+        console.log(`${this.name}移除牌：${card}`)
         // 如果为当前牌，则移除当前牌即可
         if (card === this.currentCard) {
             this.currentCard = undefined;
@@ -154,11 +251,18 @@ export class Player {
         return result;
     }
 
+    shoupaiChange() {
+        this.shoupai = lodash.sortBy(this.shoupai)
+        // 重新计算听牌数据
+        this.tingCard = this.tingpai.tingPais(this.shoupai).getTingPais();
+    }
+
     endRound() {
         if (this.currentCard) {
             this.shoupai.push(this.currentCard);
-            this.shoupai = lodash.sortBy(this.shoupai)
             this.currentCard = undefined;
+            // 存在手牌认为牌型改变
+            this.shoupaiChange()
         }
         this.drawShoupai = []
     }

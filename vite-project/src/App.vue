@@ -15,6 +15,7 @@ import MyCard from "./components/MyCard.vue";
 import {RealPlayer} from "./ai/RealPlayer.ts";
 import {computed} from "vue";
 import {useRealPlayerStore} from "./store/RealPlayerStore.ts";
+import GameView from "./components/GameView.vue";
 
 
 const configFans = [
@@ -30,40 +31,14 @@ const configFans = [
   new ConfigFan(FanType.YI_TIAO_LONG, true, 2),
   new ConfigFan(FanType.XIAO_QI_DUI, true, 2)
 ]
-const shoupai: number[] = [2, 12, 3, 13, 3, 5, 16];
-const pengs: Peng[] = [{singPengs: [5, 5, 5]}];
-const gangs: Gang[] = [{singGangs: [11, 11, 11, 11]}];
-const allshoupai: Allshoupai = new Allshoupai(shoupai, pengs, gangs, 2);
 
-var sichuanFan = new SichuanFan();
-console.log(sichuanFan.findFan(allshoupai, configFans).totalFans);
-
-const tingpai: Tingpai = new SichuanTingpai();
-console.log(tingpai.tingPais(shoupai).getTingPais());
-
-var realPlayer = new RealPlayer("我叫王老虎");
-const realPlayerStore = useRealPlayerStore()
-realPlayerStore.init(realPlayer)
-
-const playerList = [realPlayer, new Rookie("玩家2"), new Rookie("玩家3"), new Rookie("玩家4"),]
-const gameInformation = new GameInformation();
-gameInformation.doStart(playerList)
-
-while (true) {
-  if (gameInformation.isNoCard()) {
-    console.log("结束了")
-    break;
-  } else {
-    await gameInformation.doNext();
-  }
-}
 </script>
 
 <template>
   <div style="margin: 50px">
 
   </div>
-  <MyCard></MyCard>
+  <GameView></GameView>
 </template>
 
 <style scoped>
