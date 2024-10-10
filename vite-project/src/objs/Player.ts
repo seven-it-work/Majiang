@@ -185,6 +185,7 @@ export class Player {
     isTingCard(): boolean {
         return this.tingCard.length > 0
     }
+
     /**
      * 自摸
      */
@@ -258,7 +259,7 @@ export class Player {
         this.shoupai = lodash.sortBy(this.shoupai)
         // 重新计算听牌数据
         this.tingCard = this.tingpai.tingPais(this.shoupai).getTingPais();
-        if (this.tingCard.length>0){
+        if (this.tingCard.length > 0) {
             console.log("听牌了")
         }
     }
@@ -271,5 +272,13 @@ export class Player {
             this.shoupaiChange()
         }
         this.drawShoupai = []
+    }
+
+    /**
+     * 记录打过的牌
+     * @param card
+     */
+    pushPlayedCard(card: number) {
+        this.cardsPlayed.push(card)
     }
 }
