@@ -34,7 +34,7 @@ const playerList: Player[] = realPlayerStore.getPlayerList;
 
 const PickNotNeedCardOpen = ref(false)
 const currentPlayerIndex = ref(0);
-const isDebugger = ref(false);
+const isDebugger = ref(true);
 
 const gameInformation = new GameInformation();
 
@@ -400,7 +400,7 @@ function getStyle(item: number) {
         <a-flex justify="space-between" align="center" :vertical="true" style="margin-top: 20px">
           <CardBackLeftRight v-for="(card,index2) in realPlayerLeft.shoupai" :key="index2" style="margin-top: 2px"
                              :card-number="card"
-                             :card-type="getCardType(card)" :is-show-card="!isDebugger">
+                             :card-type="getCardType(card)" :is-show-card="isDebugger">
           </CardBackLeftRight>
         </a-flex>
         <!--缺牌-->
@@ -439,7 +439,7 @@ function getStyle(item: number) {
           <a-flex style="margin-right: 20px">
             <NoHoverCard v-for="(item,index) in realPlayerOn.shoupai" :key="index" :card-number="item"
                          :card-type="getCardType(item)"
-                         :is-show-card="!isDebugger"
+                         :is-show-card="isDebugger"
                          style="margin: 2px"
             >
             </NoHoverCard>
@@ -464,6 +464,14 @@ function getStyle(item: number) {
         <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px">
           出：
           <NoHoverCard v-for="(card,index) in realPlayerOn.cardsPlayed" :key="index" :card-number="card"
+                       style="margin-left: 2px"
+                       :card-type="getCardType(card)"
+          >
+          </NoHoverCard>
+        </a-flex>
+        <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px" v-if="isDebugger">
+          听：
+          <NoHoverCard v-for="(card,index2) in realPlayerOn.tingCard" :key="index2" :card-number="card"
                        style="margin-left: 2px"
                        :card-type="getCardType(card)"
           >
@@ -566,7 +574,7 @@ function getStyle(item: number) {
         <a-flex justify="space-between" align="center" :vertical="true" style="margin-top: 20px">
           <CardBackLeftRight v-for="(card,index2) in realPlayerRight.shoupai" :key="index2" style="margin-top: 2px"
                              :card-number="card"
-                             :card-type="getCardType(card)" :is-show-card="!isDebugger">
+                             :card-type="getCardType(card)" :is-show-card="isDebugger">
           </CardBackLeftRight>
         </a-flex>
         <!--缺牌-->
