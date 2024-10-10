@@ -172,13 +172,11 @@ export class Player {
         this.currentCard = card;
         // 每次抽牌都对countMap进行维护
         this.countObj[getCardType(card)] = this.countObj[getCardType(card)] + 1;
+        // 存在手牌认为牌型改变
+        try {
+            this.shoupaiChange()
+        }catch (e){}
     }
-
-    tingCardInit() {
-        this.tingCard = this.tingpai.tingPais(this.shoupai).getTingPais()
-        console.log(`${this.name}听牌了，当前手牌${this.getShouPaiStr()}，听牌：${getCardListStr(this.tingCard)}`)
-    }
-
     /**
      * 是否在听牌
      */
@@ -227,8 +225,6 @@ export class Player {
         // 如果为当前牌，则移除当前牌即可
         if (card === this.currentCard) {
             this.currentCard = undefined;
-            // 存在手牌认为牌型改变
-            this.shoupaiChange()
             return card
         }
         for (let i = 0; i < this.shoupai.length; i++) {
@@ -245,8 +241,6 @@ export class Player {
         if (this.currentCard) {
             this.shoupai[index] = this.currentCard;
             this.currentCard = undefined;
-            // 存在手牌认为牌型改变
-            this.shoupaiChange()
         } else {
             // 直接移除
             this.shoupai[index] = -1;
@@ -268,8 +262,6 @@ export class Player {
         if (this.currentCard) {
             this.shoupai.push(this.currentCard);
             this.currentCard = undefined;
-            // 存在手牌认为牌型改变
-            this.shoupaiChange()
         }
         this.drawShoupai = []
     }
@@ -279,6 +271,8 @@ export class Player {
      * @param card
      */
     pushPlayedCard(card: number) {
+        // 存在手牌认为牌型改变
+        this.shoupaiChange()
         this.cardsPlayed.push(card)
     }
 }

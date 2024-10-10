@@ -27,8 +27,9 @@ function getCardTypeColor(){
 
 <template>
   <div class="box">
+    <slot name="default"></slot>
     <div style="font-size: 25px;text-align: center" v-if="cardNumber && isShowCard">{{ getCardZhStr(cardNumber) }}</div>
-    <div style="font-size: 25px;text-align: center" v-if="isShowCard" :style="getCardTypeColor()">{{ getCardTypeStr(cardType) }}</div>
+    <div style="font-size: 25px;text-align: center" v-if="cardType && isShowCard" :style="getCardTypeColor()">{{ getCardTypeStr(cardType) }}</div>
   </div>
 </template>
 
