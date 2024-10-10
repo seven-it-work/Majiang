@@ -35,9 +35,6 @@ const configFans = [
 </script>
 
 <template>
-  <div style="margin: 50px">
-
-  </div>
   <GameView></GameView>
 </template>
 

@@ -29,20 +29,16 @@ function getCardTypeColor(){
   <div class="box">
     <slot name="default"></slot>
     <div style="font-size: 25px;text-align: center" v-if="cardNumber && isShowCard">{{ getCardZhStr(cardNumber) }}</div>
-    <div style="font-size: 25px;text-align: center;" :style="getCardTypeColor()" v-if="cardType && isShowCard">{{ getCardTypeStr(cardType) }}</div>
+    <div style="font-size: 25px;text-align: center" v-if="cardType && isShowCard" :style="getCardTypeColor()">{{ getCardTypeStr(cardType) }}</div>
   </div>
 </template>
 
 <style scoped>
 
 .box {
-  width: 40px;
-  height: 60px;
+  width: 60px;
+  height: 40px;
   background-color: gainsboro;
   transition: transform 0.3s ease; /* 添加过渡效果 */
-}
-
-.box:hover {
-  transform: translateY(-20px); /* 向上移动 20px */
 }
 </style>

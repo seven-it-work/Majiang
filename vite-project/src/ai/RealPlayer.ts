@@ -4,4 +4,28 @@ import {Player} from "../objs/Player.ts";
 export class RealPlayer extends Player {
     isAi = false;
     cardsToBePlayed: number = -1;
+
+    /**
+     * 杠牌策略
+     */
+    // @ts-ignore
+    gangAction(card: number): boolean {
+        return true;
+    }
+
+    /**
+     * 胡牌策略
+     */
+    // @ts-ignore
+    hupaiAction(card: number): boolean {
+        return true;
+    }
+
+    /**
+     * 碰牌策略
+     */
+    // @ts-ignore
+    pengAction(card: number): boolean {
+        return true;
+    }
 }

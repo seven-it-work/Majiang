@@ -3,14 +3,13 @@
 import {PaiType} from "../tingPai/PaiType.ts";
 import Card from "./Card.vue";
 import {RealPlayer} from "../ai/RealPlayer.ts";
-import {computed, ref} from "vue";
 import {useRealPlayerStore} from "../store/RealPlayerStore.ts";
 
 
 
 const realPlayerStore = useRealPlayerStore()
 const realPlayer: RealPlayer = realPlayerStore.realPlayer;
-
+realPlayer.notNeedType=PaiType.TONG
 
 function clickCard(cardType: PaiType) {
   if (realPlayer) {

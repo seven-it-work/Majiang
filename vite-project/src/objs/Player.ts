@@ -226,6 +226,8 @@ export class Player {
         // 如果为当前牌，则移除当前牌即可
         if (card === this.currentCard) {
             this.currentCard = undefined;
+            // 存在手牌认为牌型改变
+            this.shoupaiChange()
             return card
         }
         for (let i = 0; i < this.shoupai.length; i++) {
@@ -241,8 +243,9 @@ export class Player {
         const result = this.shoupai[index];
         if (this.currentCard) {
             this.shoupai[index] = this.currentCard;
-            this.shoupai = lodash.sortBy(this.shoupai)
             this.currentCard = undefined;
+            // 存在手牌认为牌型改变
+            this.shoupaiChange()
         } else {
             // 直接移除
             this.shoupai[index] = -1;
@@ -255,6 +258,9 @@ export class Player {
         this.shoupai = lodash.sortBy(this.shoupai)
         // 重新计算听牌数据
         this.tingCard = this.tingpai.tingPais(this.shoupai).getTingPais();
+        if (this.tingCard.length>0){
+            console.log("听牌了")
+        }
     }
 
     endRound() {
