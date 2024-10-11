@@ -439,7 +439,7 @@ function getStyle(item: number) {
                            :card-type="realPlayerLeft.notNeedType">
         </CardBackLeftRight>
         <CardBackLeftRight v-if="realPlayerLeft && realPlayerLeft.isHupai" style="margin-top:20px">
-          <template>
+          <template #default>
             胡牌
           </template>
         </CardBackLeftRight>
@@ -474,7 +474,7 @@ function getStyle(item: number) {
                        :card-type="realPlayerOn.notNeedType">
           </NoHoverCard>
           <NoHoverCard v-if="realPlayerOn && realPlayerOn.isHupai" style="margin-right:20px">
-            <template>
+            <template #default>
               胡牌
             </template>
           </NoHoverCard>
@@ -578,7 +578,7 @@ function getStyle(item: number) {
                 @click="discardTheCards(realPlayer.currentCard)">
           </Card>
           <NoHoverCard v-if="realPlayer && realPlayer.isHupai" style="margin-left:20px">
-            <template>
+            <template #default>
               胡牌
             </template>
           </NoHoverCard>
@@ -639,7 +639,7 @@ function getStyle(item: number) {
                            :card-type="realPlayerRight.notNeedType">
         </CardBackLeftRight>
         <CardBackLeftRight v-if="realPlayerRight && realPlayerRight.isHupai" style="margin-top:20px">
-          <template>
+          <template #default>
             胡牌
           </template>
         </CardBackLeftRight>
