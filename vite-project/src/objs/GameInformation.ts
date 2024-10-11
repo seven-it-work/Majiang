@@ -46,7 +46,11 @@ export class GameInformation {
      * 判断是否没有牌了
      * @private
      */
-     isNoCard(): boolean {
+    isNoCard(): boolean {
         return this.currentIndex >= this.allPai.length;
+    }
+
+    getNumberOfCardsRemaining(): number {
+        return this.allPai.length - this.currentIndex
     }
 }

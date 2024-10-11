@@ -12,6 +12,7 @@ import PickNotNeedCard from "./PickNotNeedCard.vue";
 import {Modal} from "ant-design-vue";
 import NoHoverCard from "./NoHoverCard.vue";
 import CardBackLeftRight from "./CardBackLeftRight.vue";
+import lodash from "lodash";
 
 // 初始化游戏信息
 var realPlayer1 = new RealPlayer("我叫王老虎");
@@ -20,7 +21,7 @@ var rookieRight = new Rookie("玩家2");
 var rookieLeft = new Rookie("玩家4");
 
 const realPlayerStore = useRealPlayerStore()
-realPlayerStore.init(realPlayer1, [realPlayer1, rookieRight, rookieOn, rookieLeft,])
+realPlayerStore.init(realPlayer1, [realPlayer1, rookieRight, rookieOn, rookieLeft,],new GameInformation())
 // @ts-ignore
 const realPlayer: RealPlayer = realPlayerStore.getRealPlayer;
 // @ts-ignore
@@ -31,12 +32,14 @@ const realPlayerOn: Player = realPlayerStore.getRealPlayerOn;
 const realPlayerLeft: Player = realPlayerStore.getRealPlayerLeft;
 // @ts-ignore
 const playerList: Player[] = realPlayerStore.getPlayerList;
+const gameInformation:GameInformation = realPlayerStore.getGameInformation;
+
 
 const PickNotNeedCardOpen = ref(false)
 const currentPlayerIndex = ref(0);
 const isDebugger = ref(true);
 
-const gameInformation = new GameInformation();
+
 
 const methods = {
   getCurrentPlayer: (): Player => {
@@ -200,7 +203,7 @@ async function doPlayCardAction() {
 }
 
 function currentDrawCard() {
-  if (gameInformation.isNoCard()){
+  if (gameInformation.isNoCard()) {
     console.log("牌摸完了，结束游戏")
     return
   }
@@ -378,7 +381,7 @@ function getStyle(item: number) {
 
 
   <a-flex justify="space-between" align="center">
-    <!--    左家-->
+    <!--左家-->
     <a-flex style="width: 20%;">
       <a-flex justify="space-between" align="center" :vertical="true">
         <!--碰牌-->
@@ -414,14 +417,23 @@ function getStyle(item: number) {
         </CardBackLeftRight>
       </a-flex>
       <a-flex justify="space-between" align="center" :vertical="true">
-        <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px" :vertical="true">
+        <a-flex v-for="item in lodash.chunk(realPlayerLeft.cardsPlayed,14)" justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px" :vertical="true">
           出：
-          <CardBackLeftRight v-for="(card,index) in realPlayerLeft.cardsPlayed" :key="index" :card-number="card"
+          <CardBackLeftRight v-for="(card,index) in item" :key="index" :card-number="card"
                              style="margin-top: 2px"
                              :card-type="getCardType(card)"
           >
           </CardBackLeftRight>
         </a-flex>
+      </a-flex>
+      <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px" v-if="isDebugger"
+              :vertical="true">
+        听：
+        <CardBackLeftRight v-for="(card,index2) in realPlayerOn.tingCard" :key="index2" :card-number="card"
+                           style="margin-top: 2px"
+                           :card-type="getCardType(card)"
+        >
+        </CardBackLeftRight>
       </a-flex>
     </a-flex>
     <a-flex style="width: 60%;" justify="flex-start" align="flex-start" wrap="wrap" :vertical="true">
@@ -478,7 +490,9 @@ function getStyle(item: number) {
           </NoHoverCard>
         </a-flex>
       </div>
-      <div style="margin-top: 500px"></div>
+      <div style="height: 400px">
+        <div>剩余牌：{{ gameInformation.getNumberOfCardsRemaining() }}</div>
+      </div>
       <!--玩家-->
       <div>
         <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px">
@@ -544,6 +558,15 @@ function getStyle(item: number) {
 
     <!-- 右家-->
     <a-flex style="width: 20%;">
+      <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px" v-if="isDebugger"
+              :vertical="true">
+        听：
+        <CardBackLeftRight v-for="(card,index2) in realPlayerOn.tingCard" :key="index2" :card-number="card"
+                           style="margin-top: 2px"
+                           :card-type="getCardType(card)"
+        >
+        </CardBackLeftRight>
+      </a-flex>
       <a-flex justify="space-between" align="center" :vertical="true">
         <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px" :vertical="true">
           出：

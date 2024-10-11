@@ -4,7 +4,7 @@ import {PaiType} from "../tingPai/PaiType.ts";
 import lodash from "lodash";
 import {Tingpai} from "../tingPai/Tingpai.ts";
 import {SichuanTingpai} from "../tingPai/SichuanTingpai.ts";
-import {getCardListByType, getCardListStr, getCardStr, getCardType} from "../util/CardUtils.ts";
+import {getCardListByType, getCardStr, getCardType} from "../util/CardUtils.ts";
 import {GameInformation} from "./GameInformation.ts";
 
 export class Player {
