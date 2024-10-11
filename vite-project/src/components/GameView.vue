@@ -13,6 +13,7 @@ import {Modal} from "ant-design-vue";
 import NoHoverCard from "./NoHoverCard.vue";
 import CardBackLeftRight from "./CardBackLeftRight.vue";
 import lodash from "lodash";
+import CardCounter from "./CardCounter.vue";
 
 // 初始化游戏信息
 var realPlayer1 = new RealPlayer("我叫王老虎");
@@ -383,7 +384,7 @@ async function discardTheCards(card: number) {
 }
 
 async function playDh() {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       resolve(true)
     }, 1000)
@@ -522,6 +523,7 @@ function getStyle(item: number) {
       </div>
       <div style="height: 400px">
         <div>剩余牌：{{ gameInformation.getNumberOfCardsRemaining() }}</div>
+        <CardCounter></CardCounter>
       </div>
       <!--玩家-->
       <div>

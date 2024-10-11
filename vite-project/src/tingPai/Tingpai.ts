@@ -4,7 +4,7 @@ import {TingDetail} from "./entities/TingDetail.ts";
 export const allDistintPai: number[] = [
     1, 2, 3, 4, 5, 6, 7, 8, 9,
     11, 12, 13, 14, 15, 16, 17, 18, 19,
-    21, 21, 23, 24, 25, 26, 27, 28, 29
+    21, 22, 23, 24, 25, 26, 27, 28, 29
 ];
 export const tong: number[] = [
     1, 2, 3, 4, 5, 6, 7, 8, 9
@@ -13,7 +13,7 @@ export const tiao: number[] = [
     11, 12, 13, 14, 15, 16, 17, 18, 19
 ];
 export const wan: number[] = [
-    21, 21, 23, 24, 25, 26, 27, 28, 29
+    21, 22, 23, 24, 25, 26, 27, 28, 29
 ];
 
 /**
