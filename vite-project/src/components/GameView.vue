@@ -97,7 +97,7 @@ const confirmWithPromise = (options: any): Promise<boolean> => {
       },
       onCancel: () => {
         console.log("cancel")
-        reject(false)
+        resolve(false)
       }
     });
   });
@@ -243,6 +243,8 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
       if (hupaiElement.hupai(card)) {
         console.log(`${hupaiElement.name}胡牌：${card}`)
         // 这里是胡牌的下一个人继续执行
+        // 移除出牌人的出牌数据
+        dealer.cardsPlayed.pop()
         // 改变下一个执行人
         currentNextMove()
         // 摸牌
@@ -264,6 +266,8 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
       )
       if (result) {
         console.log("玩家胡牌")
+        // 移除出牌人的出牌数据
+        dealer.cardsPlayed.pop()
         hupaiElement.hupai(card);
         // 改变下一个执行人
         currentNextMove()
@@ -279,13 +283,17 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
       if (element.gang(card)) {
         console.log(`${element.name}杠牌：${card}`)
         // 这里杠了继续摸牌执行
+        // 移除出牌人的出牌数据
+        dealer.cardsPlayed.pop()
         // 摸牌
         currentDrawCard()
         return true;
       }
     } else {
       // 这里可能要采用弹窗形式去阻塞了
-      console.log("todo 玩家是否需要杠牌")
+      console.log("玩家是否需要杠牌")
+      // 移除出牌人的出牌数据
+      dealer.cardsPlayed.pop()
       const result = await confirmWithPromise(
           {
             title: '是否需要杠牌',
@@ -311,6 +319,8 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
       if (element.peng(card)) {
         console.log(`${element.name}碰牌：${card}`)
         currentPlayerIndex.value = playerList.findIndex(item => item.id === element.id)
+        // 移除出牌人的出牌数据
+        dealer.cardsPlayed.pop()
         // 这里碰了，继续执行
         return true;
       }
@@ -327,8 +337,11 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
             cancelText: "取消",
           }
       )
+      debugger
       if (result) {
         console.log("玩家碰牌")
+        // 移除出牌人的出牌数据
+        dealer.cardsPlayed.pop()
         // 移除碰
         element.peng(card);
         currentPlayerIndex.value = playerList.findIndex(item => item.id === element.id)
@@ -343,6 +356,9 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
  * 玩家出牌
  */
 async function discardTheCards(card: number) {
+  if (!realPlayer.isMyTurn) {
+    return
+  }
   const currentPlayer = methods.getCurrentPlayer();
   // 从手牌中移除
   currentPlayer.removeInShouPai(card)
