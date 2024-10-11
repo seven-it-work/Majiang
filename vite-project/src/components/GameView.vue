@@ -21,7 +21,7 @@ var rookieRight = new Rookie("玩家2");
 var rookieLeft = new Rookie("玩家4");
 
 const realPlayerStore = useRealPlayerStore()
-realPlayerStore.init(realPlayer1, [realPlayer1, rookieRight, rookieOn, rookieLeft,],new GameInformation())
+realPlayerStore.init(realPlayer1, [realPlayer1, rookieRight, rookieOn, rookieLeft,], new GameInformation())
 // @ts-ignore
 const realPlayer: RealPlayer = realPlayerStore.getRealPlayer;
 // @ts-ignore
@@ -32,13 +32,12 @@ const realPlayerOn: Player = realPlayerStore.getRealPlayerOn;
 const realPlayerLeft: Player = realPlayerStore.getRealPlayerLeft;
 // @ts-ignore
 const playerList: Player[] = realPlayerStore.getPlayerList;
-const gameInformation:GameInformation = realPlayerStore.getGameInformation;
+const gameInformation: GameInformation = realPlayerStore.getGameInformation;
 
 
 const PickNotNeedCardOpen = ref(false)
 const currentPlayerIndex = ref(0);
 const isDebugger = ref(true);
-
 
 
 const methods = {
@@ -157,6 +156,8 @@ async function doPlayCardAction() {
     currentPlayer.pushPlayedCard(number)
     // 结束回合
     currentPlayer.endRound();
+    // 执行动画
+    await playDh()
     // 判断
     if (await discardCard(currentPlayer, number)) {
       // 被改变了下一个执行人
@@ -349,6 +350,8 @@ async function discardTheCards(card: number) {
   currentPlayer.pushPlayedCard(card)
   // 结束回合
   currentPlayer.endRound();
+  // 执行动画
+  await playDh()
   // 判断
   if (await discardCard(currentPlayer, card)) {
     console.log(`${card}：有人需要`)
@@ -361,6 +364,14 @@ async function discardTheCards(card: number) {
     currentDrawCard()
     await doPlayCardAction()
   }
+}
+
+async function playDh() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(true)
+    }, 1000)
+  })
 }
 
 function getStyle(item: number) {
@@ -417,11 +428,13 @@ function getStyle(item: number) {
         </CardBackLeftRight>
       </a-flex>
       <a-flex justify="space-between" align="center" :vertical="true">
-        <a-flex v-for="item in lodash.chunk(realPlayerLeft.cardsPlayed,14)" justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px" :vertical="true">
+        <a-flex v-for="item in lodash.chunk(realPlayerLeft.cardsPlayed,14)" justify="flex-start" align="flex-start"
+                wrap="wrap" style="margin: 5px" :vertical="true">
           出：
           <CardBackLeftRight v-for="(card,index) in item" :key="index" :card-number="card"
                              style="margin-top: 2px"
                              :card-type="getCardType(card)"
+                             :class="index===realPlayerLeft.cardsPlayed.length-1?'animate__animated animate__bounce':''"
           >
           </CardBackLeftRight>
         </a-flex>
@@ -478,6 +491,7 @@ function getStyle(item: number) {
           <NoHoverCard v-for="(card,index) in realPlayerOn.cardsPlayed" :key="index" :card-number="card"
                        style="margin-left: 2px"
                        :card-type="getCardType(card)"
+                       :class="index===realPlayerOn.cardsPlayed.length-1?'animate__animated animate__bounce':''"
           >
           </NoHoverCard>
         </a-flex>
@@ -500,6 +514,7 @@ function getStyle(item: number) {
           <NoHoverCard v-for="(card,index) in realPlayer.cardsPlayed" :key="index" :card-number="card"
                        style="margin-left: 2px"
                        :card-type="getCardType(card)"
+                       :class="index===realPlayer.cardsPlayed.length-1?'animate__animated animate__bounce':''"
           >
           </NoHoverCard>
         </a-flex>
@@ -573,6 +588,7 @@ function getStyle(item: number) {
           <CardBackLeftRight v-for="(card,index) in realPlayerRight.cardsPlayed" :key="index" :card-number="card"
                              style="margin-top: 2px"
                              :card-type="getCardType(card)"
+                             :class="index===realPlayerRight.cardsPlayed.length-1?'animate__animated animate__bounce':''"
           >
           </CardBackLeftRight>
         </a-flex>
