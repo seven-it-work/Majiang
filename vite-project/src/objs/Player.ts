@@ -46,7 +46,10 @@ export class Player {
         "TIAO": 0,
         "WAN": 0,
     }
-    isMyTurn:boolean=true;
+    isMyTurn: boolean = true;
+    // 是否为自摸
+    isSelfWin: boolean = false;
+    hupaiCard?: number;
 
     /**
      * 胡牌策略
@@ -63,6 +66,7 @@ export class Player {
         if (this.hupaiAction(card)) {
             console.log(`${this.name}胡牌：${card}`)
             this.isHupai = true
+            this.hupaiCard=card
             return true;
         }
         return false;
@@ -89,7 +93,7 @@ export class Player {
      */
     gang(card: number): boolean {
         if (this.gangAction(card)) {
-            this.isMyTurn=true
+            this.isMyTurn = true
             console.log(`${this.name}杠牌：${card}`)
             this.shoupai = this.shoupai.filter(item => item !== card)
             this.gangs.push({singGangs: [card, card, card, card]})
@@ -114,7 +118,7 @@ export class Player {
      */
     peng(card: number): boolean {
         if (this.pengAction(card)) {
-            this.isMyTurn=true
+            this.isMyTurn = true
             console.log(`${this.name}碰牌：${card}`)
             for (let i = 0; i < 2; i++) {
                 this.removeInShouPai(card);
@@ -171,7 +175,7 @@ export class Player {
     }
 
     drawCard(card: number) {
-        this.isMyTurn=true
+        this.isMyTurn = true
         console.log(`${this.name}抽到了${getCardStr(card)}，当前手牌${this.getShouPaiStr()}`)
         this.currentCard = card;
         // 每次抽牌都对countMap进行维护
@@ -179,8 +183,10 @@ export class Player {
         // 存在手牌认为牌型改变
         try {
             this.shoupaiChange()
-        }catch (e){}
+        } catch (e) {
+        }
     }
+
     /**
      * 是否在听牌
      */
@@ -268,7 +274,7 @@ export class Player {
             this.currentCard = undefined;
         }
         this.drawShoupai = []
-        this.isMyTurn=false
+        this.isMyTurn = false
     }
 
     /**

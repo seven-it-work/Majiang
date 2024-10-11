@@ -133,6 +133,8 @@ async function doPlayCardAction() {
         // @ts-ignore
         if (currentPlayer.hupai(currentPlayer.currentCard)) {
           console.log(`${currentPlayer.name}自摸：${currentPlayer.currentCard}`)
+            currentPlayer.currentCard=undefined
+            currentPlayer.isSelfWin=true
           // 改变下一个执行人
           currentNextMove()
           return
@@ -142,6 +144,7 @@ async function doPlayCardAction() {
         // 如果杠牌，杠牌执行策略
         // @ts-ignore
         if (currentPlayer.gangAction(currentPlayer.currentCard)) {
+            currentPlayer.currentCard=undefined
           console.log(`${currentPlayer.name}原始杠牌：${currentPlayer.currentCard}`)
           // 继续执行  摸牌
           currentDrawCard()
@@ -338,7 +341,6 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
             cancelText: "取消",
           }
       )
-      debugger
       if (result) {
         console.log("玩家碰牌")
         // 移除出牌人的出牌数据
@@ -438,7 +440,11 @@ function getStyle(item: number) {
         <CardBackLeftRight v-if="realPlayerLeft && realPlayerLeft.notNeedType" style="margin-top:20px"
                            :card-type="realPlayerLeft.notNeedType">
         </CardBackLeftRight>
-        <CardBackLeftRight v-if="realPlayerLeft && realPlayerLeft.isHupai" style="margin-top:20px">
+        <CardBackLeftRight v-if="realPlayerLeft && realPlayerLeft.isHupai" style="margin-top:20px"
+                           :cardType="getCardType(realPlayerLeft.hupaiCard)"
+                           :cardNumber="realPlayerLeft.hupaiCard"
+                           :isShowCard="!realPlayerLeft.isSelfWin || isDebugger"
+        >
           <template #default>
             胡牌
           </template>
@@ -473,7 +479,11 @@ function getStyle(item: number) {
           <NoHoverCard v-if="realPlayerOn && realPlayerOn.notNeedType" style="margin-right:20px"
                        :card-type="realPlayerOn.notNeedType">
           </NoHoverCard>
-          <NoHoverCard v-if="realPlayerOn && realPlayerOn.isHupai" style="margin-right:20px">
+          <NoHoverCard v-if="realPlayerOn && realPlayerOn.isHupai" style="margin-right:20px"
+                       :cardType="getCardType(realPlayerOn.hupaiCard)"
+                       :cardNumber="realPlayerOn.hupaiCard"
+                       :isShowCard="!realPlayerOn.isSelfWin || isDebugger"
+          >
             <template #default>
               胡牌
             </template>
@@ -577,7 +587,10 @@ function getStyle(item: number) {
                 :card-type="getCardType(realPlayer.currentCard)"
                 @click="discardTheCards(realPlayer.currentCard)">
           </Card>
-          <NoHoverCard v-if="realPlayer && realPlayer.isHupai" style="margin-left:20px">
+          <NoHoverCard v-if="realPlayer && realPlayer.isHupai" style="margin-left:20px"
+                       :cardType="getCardType(realPlayer.hupaiCard)"
+                       :cardNumber="realPlayer.hupaiCard"
+                       :isShowCard="true">
             <template #default>
               胡牌
             </template>
@@ -638,7 +651,11 @@ function getStyle(item: number) {
         <CardBackLeftRight v-if="realPlayerRight && realPlayerRight.notNeedType" style="margin-top:20px"
                            :card-type="realPlayerRight.notNeedType">
         </CardBackLeftRight>
-        <CardBackLeftRight v-if="realPlayerRight && realPlayerRight.isHupai" style="margin-top:20px">
+        <CardBackLeftRight v-if="realPlayerRight && realPlayerRight.isHupai" style="margin-top:20px"
+                           :cardType="getCardType(realPlayerRight.hupaiCard)"
+                           :cardNumber="realPlayerRight.hupaiCard"
+                           :isShowCard="!realPlayerRight.isSelfWin || isDebugger"
+        >
           <template #default>
             胡牌
           </template>
