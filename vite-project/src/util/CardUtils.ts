@@ -62,7 +62,7 @@ export function getCardTypeStrByCard(card: number): string {
     return getCardTypeStr(getCardType(card))
 }
 
-export function getCardType(card: number): PaiType {
+export function getCardType(card?: number): PaiType {
     if (card < 10) {
         return PaiType.TONG;
     }

@@ -51,6 +51,12 @@ export class GameInformation {
     }
 
     getNumberOfCardsRemaining(): number {
+        console.log(this.currentIndex)
         return this.allPai.length - this.currentIndex
+    }
+
+    initByJson(obj: any):GameInformation {
+        Object.assign(this, obj)
+        return this
     }
 }

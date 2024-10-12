@@ -5,6 +5,7 @@ export class RealPlayer extends Player {
     isAi = false;
     cardsToBePlayed: number = -1;
 
+
     /**
      * 杠牌策略
      */

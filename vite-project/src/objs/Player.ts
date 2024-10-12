@@ -1,7 +1,7 @@
 import {Peng} from "../fan/entities/Peng.ts";
 import {Gang} from "../fan/entities/Gang.ts";
 import {PaiType} from "../tingPai/PaiType.ts";
-import lodash from "lodash";
+import lodash, {cloneDeep} from "lodash";
 import {Tingpai} from "../tingPai/Tingpai.ts";
 import {SichuanTingpai} from "../tingPai/SichuanTingpai.ts";
 import {getCardListByType, getCardStr, getCardType} from "../util/CardUtils.ts";
@@ -9,11 +9,13 @@ import {GameInformation} from "./GameInformation.ts";
 
 export class Player {
     id: string = lodash.uniqueId();
-    name: string;
+    name?: string;
     gameInformation?: GameInformation;
 
-    constructor(name: string) {
-        this.name = name;
+    constructor(name?: string) {
+        if (name){
+            this.name = name;
+        }
     }
 
     // 手牌
@@ -51,6 +53,18 @@ export class Player {
     isSelfWin: boolean = false;
     hupaiCard?: number;
 
+    initByJson(obj: any): Player {
+        Object.assign(this, obj)
+        this.tingpai = new SichuanTingpai()
+        return this;
+    }
+
+    toJsonObj(): any {
+        const cloneDeep1 = JSON.parse(JSON.stringify(this))
+        delete cloneDeep1.gameInformation;
+        return cloneDeep1
+    }
+
     /**
      * 胡牌策略
      */
@@ -66,7 +80,7 @@ export class Player {
         if (this.hupaiAction(card)) {
             console.log(`${this.name}胡牌：${card}`)
             this.isHupai = true
-            this.hupaiCard=card
+            this.hupaiCard = card
             return true;
         }
         return false;
