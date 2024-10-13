@@ -29,7 +29,7 @@ export class Player {
     // 缺牌类型
     notNeedType?: PaiType;
     // 当前摸的牌
-    currentCard?: number = 0;
+    currentCard?: number;
     // 打出过的牌
     cardsPlayed: number[] = [];
     // 我知道的牌（记牌器），这个是独特的记牌器，比如能看见他人的记牌器

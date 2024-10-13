@@ -15,6 +15,7 @@ import CardBackLeftRight from "./CardBackLeftRight.vue";
 import lodash from "lodash";
 import CardCounter from "./CardCounter.vue";
 import Save from "./Save.vue";
+import Checkout from "./Checkout.vue";
 
 // 初始化游戏信息
 var realPlayer1 = new RealPlayer("我叫王老虎");
@@ -51,6 +52,8 @@ function loadData() {
       player.getGameInformation = gameInformationInit;
     })
     realPlayerStore.init(playerInfo, data, gameInformationInit)
+      // 初始化完成后，进行打牌方法调用
+      doPlayCardAction()
   } catch (e) {
     console.log(e)
   }
@@ -162,7 +165,10 @@ async function doPlayCardAction() {
           currentPlayer.currentCard = undefined
           console.log(`${currentPlayer.name}原始杠牌：${currentPlayer.currentCard}`)
           // 继续执行  摸牌
-          currentDrawCard()
+
+            if (!currentDrawCard()){
+                return
+            }
           await doPlayCardAction()
           return
         }
@@ -186,7 +192,10 @@ async function doPlayCardAction() {
       // 改变下一个执行人
       currentNextMove()
       // 摸牌
-      currentDrawCard()
+
+        if (!currentDrawCard()){
+            return
+        }
       await doPlayCardAction()
       return
     }
@@ -210,7 +219,9 @@ async function doPlayCardAction() {
         if (currentPlayer.gangAction(currentPlayer.currentCard)) {
           console.log(`${currentPlayer.name}原始杠牌：${currentPlayer.currentCard}`)
           // 继续执行  摸牌
-          currentDrawCard()
+          if (!currentDrawCard()){
+              return
+          }
           await doPlayCardAction()
           return
         }
@@ -222,12 +233,23 @@ async function doPlayCardAction() {
   }
 }
 
-function currentDrawCard() {
+function currentDrawCard():boolean {
   if (realPlayerStore.getGameInformation.isNoCard()) {
     console.log("牌摸完了，结束游戏")
-    return
+      // 游戏结束表示，弹窗结算弹窗
+      Modal.confirm({
+          content:h(Checkout),
+          okText:"新的开始",
+          cancelText:"退出",
+          onOk: () => {
+          },
+          onCancel: () => {
+          }
+      });
+    return false
   }
   methods.getCurrentPlayer().drawCard(realPlayerStore.getGameInformation.takeOneCard())
+return true
 }
 
 /**
@@ -267,7 +289,10 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
         // 改变下一个执行人
         currentNextMove()
         // 摸牌
-        currentDrawCard()
+
+          if (!currentDrawCard()){
+              return
+          }
         return true;
       }
     } else {
@@ -291,7 +316,10 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
         // 改变下一个执行人
         currentNextMove()
         // 摸牌
-        currentDrawCard()
+
+          if (!currentDrawCard()){
+              return
+          }
         return result
       }
     }
@@ -305,7 +333,10 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
         // 移除出牌人的出牌数据
         dealer.cardsPlayed.pop()
         // 摸牌
-        currentDrawCard()
+
+          if (!currentDrawCard()){
+              return
+          }
         return true;
       }
     } else {
@@ -327,7 +358,10 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
         console.log("玩家杠牌")
         element.gang(card);
         // 摸牌
-        currentDrawCard()
+
+          if (!currentDrawCard()){
+              return
+          }
         return result
       }
     }
@@ -395,7 +429,10 @@ async function discardTheCards(card: number) {
     // 改变下一个执行人
     currentNextMove()
     // 摸牌
-    currentDrawCard()
+
+      if (!currentDrawCard()){
+          return
+      }
     await doPlayCardAction()
   }
 }
