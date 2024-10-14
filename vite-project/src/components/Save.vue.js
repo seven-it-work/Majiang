@@ -1,0 +1,67 @@
+import { writeText } from 'clipboard-polyfill';
+import { useRealPlayerStore } from "../store/RealPlayerStore.ts";
+const { defineProps, defineSlots, defineEmits, defineExpose, defineModel, defineOptions, withDefaults, } = await import('vue');
+const realPlayerStore = useRealPlayerStore();
+function doSave() {
+    realPlayerStore.doSave();
+    writeText(realPlayerStore.saveJson).then(() => {
+        console.log("成功");
+    });
+}
+const __VLS_fnComponent = (await import('vue')).defineComponent({});
+;
+let __VLS_functionalComponentProps;
+function __VLS_template() {
+    const __VLS_ctx = {};
+    const __VLS_localComponents = {
+        ...{},
+        ...{},
+        ...__VLS_ctx,
+    };
+    let __VLS_components;
+    const __VLS_localDirectives = {
+        ...{},
+        ...__VLS_ctx,
+    };
+    let __VLS_directives;
+    let __VLS_styleScopedClasses;
+    // CSS variable injection 
+    // CSS variable injection end 
+    let __VLS_resolvedLocalAndGlobalComponents;
+    const __VLS_0 = __VLS_resolvedLocalAndGlobalComponents.AButton;
+    /** @type { [typeof __VLS_components.AButton, typeof __VLS_components.aButton, typeof __VLS_components.AButton, typeof __VLS_components.aButton, ] } */
+    // @ts-ignore
+    const __VLS_1 = __VLS_asFunctionalComponent(__VLS_0, new __VLS_0({ ...{ 'onClick': {} }, }));
+    const __VLS_2 = __VLS_1({ ...{ 'onClick': {} }, }, ...__VLS_functionalComponentArgsRest(__VLS_1));
+    let __VLS_6;
+    const __VLS_7 = {
+        onClick: (__VLS_ctx.doSave)
+    };
+    let __VLS_3;
+    let __VLS_4;
+    __VLS_nonNullable(__VLS_5.slots).default;
+    const __VLS_5 = __VLS_pickFunctionalComponentCtx(__VLS_0, __VLS_2);
+    var __VLS_slots;
+    var __VLS_inheritedAttrs;
+    const __VLS_refs = {};
+    var $refs;
+    return {
+        slots: __VLS_slots,
+        refs: $refs,
+        attrs: {},
+    };
+}
+;
+const __VLS_self = (await import('vue')).defineComponent({
+    setup() {
+        return {
+            doSave: doSave,
+        };
+    },
+});
+export default (await import('vue')).defineComponent({
+    setup() {
+        return {};
+    },
+});
+;

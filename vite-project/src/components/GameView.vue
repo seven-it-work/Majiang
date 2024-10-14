@@ -16,6 +16,7 @@ import lodash from "lodash";
 import CardCounter from "./CardCounter.vue";
 import Save from "./Save.vue";
 import Checkout from "./Checkout.vue";
+import PengView from "./PengView.vue";
 
 // 初始化游戏信息
 var realPlayer1 = new RealPlayer("我叫王老虎");
@@ -37,7 +38,6 @@ const jsonData = ref('');
 function loadData() {
   try {
     const parse = JSON.parse(jsonData.value);
-    debugger
     const playerInfo: RealPlayer = new RealPlayer().initByJson(parse.realPlayer) as RealPlayer;
     const gameInformationInit = new GameInformation().initByJson(parse.gameInformation);
     const data = parse.playerList.map((o: any) => {
@@ -383,9 +383,10 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
       const result = await confirmWithPromise(
           {
             title: '是否需要碰牌',
-            content: '这里是碰牌页面',
+            content: h(PengView,{cardNumber:card}),
             closable: false,
             keyboard: false,
+            wrapClassName:"full-modal",
             okText: "确定",
             cancelText: "取消",
           }
@@ -403,7 +404,17 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
   }
   return false;
 }
-
+confirmWithPromise(
+    {
+      title: '是否需要碰牌',
+      content: h(PengView,{cardNumber:1}),
+      closable: false,
+      keyboard: false,
+      wrapClassName:"full-modal",
+      okText: "确定",
+      cancelText: "取消",
+    }
+)
 /**
  * 玩家出牌
  */
