@@ -207,9 +207,11 @@ async function doPlayCardAction() {
         // 如果胡牌，胡牌执行策略
         // @ts-ignore
         if (currentPlayer.hupai(currentPlayer.currentCard)) {
+          // todo判断是否需要自摸
           console.log(`${currentPlayer.name}自摸：${currentPlayer.currentCard}`)
           // 改变下一个执行人
           currentNextMove()
+          await doPlayCardAction()
           return
         }
       }
@@ -297,7 +299,7 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
       }
     } else {
       // 这里可能要采用弹窗形式去阻塞了
-      console.log("todo 玩家是否需要胡牌")
+      console.log("玩家是否需要胡牌")
       const result = await confirmWithPromise(
           {
             title: '是否需要胡牌',
@@ -379,7 +381,7 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
       }
     } else {
       // 这里可能要采用弹窗形式去阻塞了
-      console.log("todo 玩家是否需要碰牌")
+      console.log("玩家是否需要碰牌")
       const result = await confirmWithPromise(
           {
             title: '是否需要碰牌',
