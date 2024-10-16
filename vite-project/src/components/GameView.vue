@@ -524,7 +524,7 @@ function getStyle(item: number) {
       <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px" v-if="isDebugger"
               :vertical="true">
         听：
-        <CardBackLeftRight v-for="(card,index2) in realPlayerStore.getRealPlayerOn.tingCard" :key="index2" :card-number="card"
+        <CardBackLeftRight v-for="(card,index2) in realPlayerStore.getRealPlayerLeft.tingCard" :key="index2" :card-number="card"
                            style="margin-top: 2px"
                            :card-type="getCardType(card)"
         >
@@ -667,7 +667,7 @@ function getStyle(item: number) {
       <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px" v-if="isDebugger"
               :vertical="true">
         听：
-        <CardBackLeftRight v-for="(card,index2) in realPlayerStore.getRealPlayerOn.tingCard" :key="index2" :card-number="card"
+        <CardBackLeftRight v-for="(card,index2) in realPlayerStore.getRealPlayerRight.tingCard" :key="index2" :card-number="card"
                            style="margin-top: 2px"
                            :card-type="getCardType(card)"
         >
