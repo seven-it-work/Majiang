@@ -37,6 +37,7 @@ const jsonData = ref('');
 
 function loadData() {
   try {
+    debugger
     const parse = JSON.parse(jsonData.value);
     const playerInfo: RealPlayer = new RealPlayer().initByJson(parse.realPlayer) as RealPlayer;
     const gameInformationInit = new GameInformation().initByJson(parse.gameInformation);

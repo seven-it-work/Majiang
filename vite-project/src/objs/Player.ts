@@ -1,7 +1,7 @@
 import {Peng} from "../fan/entities/Peng.ts";
 import {Gang} from "../fan/entities/Gang.ts";
 import {PaiType} from "../tingPai/PaiType.ts";
-import lodash, {cloneDeep} from "lodash";
+import lodash from "lodash";
 import {Tingpai} from "../tingPai/Tingpai.ts";
 import {SichuanTingpai} from "../tingPai/SichuanTingpai.ts";
 import {getCardListByType, getCardStr, getCardType} from "../util/CardUtils.ts";
@@ -77,6 +77,10 @@ export class Player {
      * 胡牌
      */
     hupai(card: number): boolean {
+        // 定缺的牌不能
+        if (getCardType(card)===this.notNeedType){
+            return false;
+        }
         if (this.hupaiAction(card)) {
             console.log(`${this.name}胡牌：${card}`)
             this.isHupai = true
@@ -106,6 +110,10 @@ export class Player {
      * 杠牌
      */
     gang(card: number): boolean {
+        // 定缺的牌不能
+        if (getCardType(card)===this.notNeedType){
+            return false;
+        }
         if (this.gangAction(card)) {
             this.isMyTurn = true
             console.log(`${this.name}杠牌：${card}`)
@@ -131,6 +139,10 @@ export class Player {
      * 碰牌策略
      */
     peng(card: number): boolean {
+        // 定缺的牌不能碰
+        if (getCardType(card)===this.notNeedType){
+            return false;
+        }
         if (this.pengAction(card)) {
             this.isMyTurn = true
             console.log(`${this.name}碰牌：${card}`)
