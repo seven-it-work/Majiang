@@ -2,15 +2,18 @@
     .ant-modal {
         max-width: 40%;
         top: 0;
+        left: 50%;
+        transform: translateX(-50%); /* 向左移动自身宽度的一半 */
+        right: auto;
         padding-bottom: 0;
         margin: 0;
     }
     .ant-modal-content {
         display: flex;
         flex-direction: column;
-        height: calc(50vh);
     }
     .ant-modal-body {
         flex: 1;
+        line-height: 1;
     }
 }

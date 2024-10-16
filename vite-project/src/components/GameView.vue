@@ -404,17 +404,7 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
   }
   return false;
 }
-confirmWithPromise(
-    {
-      title: '是否需要碰牌',
-      content: h(PengView,{cardNumber:1}),
-      closable: false,
-      keyboard: false,
-      wrapClassName:"full-modal",
-      okText: "确定",
-      cancelText: "取消",
-    }
-)
+
 /**
  * 玩家出牌
  */

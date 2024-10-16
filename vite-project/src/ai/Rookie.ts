@@ -116,32 +116,13 @@ export class Rookie extends Player {
     }
 
     /**
-     * 判断缺牌
+     * 定缺策略
      */
-    judgeTheLackOfCards() {
-        const countObj = [
-            {type: PaiType.TONG, count: getCardListByType(this.drawShoupai, PaiType.TONG).length,},
-            {type: PaiType.TIAO, count: getCardListByType(this.drawShoupai, PaiType.TIAO).length,},
-            {type: PaiType.WAN, count: getCardListByType(this.drawShoupai, PaiType.WAN).length,},
-        ]
-        const sortBy = lodash.sortBy(countObj, o => o.count);
-        if (sortBy[0].count === sortBy[1].count) {
-            // 随便选择一个
-            this.notNeedType = lodash.sample([sortBy[0].type, sortBy[1].type])
-            console.log(`${this.name}缺${getCardTypeStr(this.notNeedType)}，当前手牌${this.getShouPaiStr()}`)
-        } else if (sortBy[0].count < sortBy[1].count) {
-            this.notNeedType = sortBy[0].type
-            console.log(`${this.name}缺${getCardTypeStr(this.notNeedType)}，当前手牌${this.getShouPaiStr()}`)
-        } else {
-            throw new Error("未知")
-        }
-    }
-
     judgeNotNeedCardAction() {
         const countObj = [
-            {type: PaiType.TONG, count: getCardListByType(this.drawShoupai, PaiType.TONG).length,},
-            {type: PaiType.TIAO, count: getCardListByType(this.drawShoupai, PaiType.TIAO).length,},
-            {type: PaiType.WAN, count: getCardListByType(this.drawShoupai, PaiType.WAN).length,},
+            {type: PaiType.TONG, count: getCardListByType(this.shoupai, PaiType.TONG).length,},
+            {type: PaiType.TIAO, count: getCardListByType(this.shoupai, PaiType.TIAO).length,},
+            {type: PaiType.WAN, count: getCardListByType(this.shoupai, PaiType.WAN).length,},
         ]
         const sortBy = lodash.sortBy(countObj, o => o.count);
         if (sortBy[0].count === sortBy[1].count) {

@@ -3,6 +3,7 @@
 import Save from "./Save.vue";
 import {getCardType} from "../util/CardUtils.ts";
 import NoHoverCard from "./NoHoverCard.vue";
+import {  Flex } from 'ant-design-vue';
 
 const prop=defineProps({
       cardNumber: Number,
@@ -10,10 +11,11 @@ const prop=defineProps({
 </script>
 
 <template>
-  <a-flex>
+  <Flex :justify="'space-between'" :align="'flex-end'">
     <NoHoverCard :card-number="cardNumber" :card-type="getCardType(cardNumber)"></NoHoverCard>
-  </a-flex>
-  <Save></Save>
+    <Save></Save>
+  </Flex>
+
 </template>
 
 <style scoped>

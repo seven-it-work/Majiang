@@ -173,9 +173,9 @@ export class Player {
     judgeNotNeedCard() {
         // 初始化mapCount
         this.countObj = {
-            "TONG": getCardListByType(this.drawShoupai, PaiType.TONG).length,
-            "TIAO": getCardListByType(this.drawShoupai, PaiType.TIAO).length,
-            "WAN": getCardListByType(this.drawShoupai, PaiType.WAN).length,
+            "TONG": getCardListByType(this.shoupai, PaiType.TONG).length,
+            "TIAO": getCardListByType(this.shoupai, PaiType.TIAO).length,
+            "WAN": getCardListByType(this.shoupai, PaiType.WAN).length,
         }
         this.judgeNotNeedCardAction();
     }

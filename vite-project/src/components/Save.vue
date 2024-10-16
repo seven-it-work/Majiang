@@ -2,6 +2,7 @@
 import { writeText } from 'clipboard-polyfill';
 import {useRealPlayerStore} from "../store/RealPlayerStore.ts";
 const realPlayerStore = useRealPlayerStore()
+import {  Button } from 'ant-design-vue';
 function doSave(){
   realPlayerStore.doSave()
   writeText(realPlayerStore.saveJson).then(()=>{
@@ -11,9 +12,11 @@ function doSave(){
 </script>
 
 <template>
-<a-button @click="doSave">
-  获取保存数据
-</a-button>
+<div>
+  <Button @click="doSave">
+    获取保存数据
+  </Button>
+</div>
 </template>
 
 <style scoped>
