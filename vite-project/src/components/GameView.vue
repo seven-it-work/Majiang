@@ -4,7 +4,7 @@ import {getCardType} from "../util/CardUtils.ts";
 import Card from "./Card.vue";
 import {useRealPlayerStore} from "../store/RealPlayerStore.ts";
 import {RealPlayer} from "../ai/RealPlayer.ts";
-import {h, ref} from "vue";
+import {h, onMounted, ref} from "vue";
 import {Rookie} from "../ai/Rookie.ts";
 import {GameInformation} from "../objs/GameInformation.ts";
 import {Player} from "../objs/Player.ts";
@@ -17,6 +17,7 @@ import CardCounter from "./CardCounter.vue";
 import Save from "./Save.vue";
 import Checkout from "./Checkout.vue";
 import PengView from "./PengView.vue";
+import {beChu} from "../util/AnimateUtils.ts";
 
 // 初始化游戏信息
 var realPlayer1 = new RealPlayer("我叫王老虎");
@@ -36,7 +37,6 @@ const jsonData = ref('');
 
 function loadData() {
   try {
-    debugger
     const parse = JSON.parse(jsonData.value);
     const playerInfo: RealPlayer = new RealPlayer().initByJson(parse.realPlayer) as RealPlayer;
     const gameInformationInit = new GameInformation().initByJson(parse.gameInformation);
@@ -182,7 +182,7 @@ async function doPlayCardAction() {
     // 结束回合
     currentPlayer.endRound();
     // 执行动画
-    await playDh()
+    await playDh(currentPlayer)
     // 判断
     if (await discardCard(currentPlayer, number)) {
       // 被改变了下一个执行人
@@ -291,7 +291,7 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
         // 摸牌
 
         if (!currentDrawCard()) {
-          return
+          return false
         }
         return true;
       }
@@ -318,7 +318,7 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
         // 摸牌
 
         if (!currentDrawCard()) {
-          return
+          return false
         }
         return result
       }
@@ -335,7 +335,7 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
         // 摸牌
 
         if (!currentDrawCard()) {
-          return
+          return false
         }
         return true;
       }
@@ -420,7 +420,7 @@ async function discardTheCards(card: number) {
   // 结束回合
   currentPlayer.endRound();
   // 执行动画
-  await playDh()
+  await playDh(currentPlayer)
   // 判断
   if (await discardCard(currentPlayer, card)) {
     console.log(`${card}：有人需要`)
@@ -438,8 +438,18 @@ async function discardTheCards(card: number) {
   }
 }
 
-async function playDh() {
+
+async function playDh(palyer:Player) {
   return new Promise((resolve) => {
+    setTimeout(() => {
+      const elementById = document.getElementById(`chu_${palyer.id}`);
+      if (elementById){
+        const elementNodeListOf = elementById.querySelectorAll(".box");
+        if (elementNodeListOf && elementNodeListOf.length>0){
+          beChu(elementNodeListOf[elementNodeListOf.length-1],1)
+        }
+      }
+    }, 200)
     setTimeout(() => {
       resolve(true)
     }, 1000)
@@ -514,17 +524,18 @@ function getStyle(item: number) {
         </CardBackLeftRight>
       </a-flex>
       <a-flex justify="space-between" align="center" :vertical="true">
-        <a-flex v-for="item in lodash.chunk(realPlayerStore.getRealPlayerLeft.cardsPlayed,14)" justify="flex-start"
-                align="flex-start"
-                wrap="wrap" style="margin: 5px" :vertical="true">
-          出：
-          <CardBackLeftRight v-for="(card,index) in item" :key="index" :card-number="card"
-                             style="margin-top: 2px"
-                             :card-type="getCardType(card)"
-                             :class="index===realPlayerStore.getRealPlayerLeft.cardsPlayed.length-1?'animate__animated animate__bounce':''"
-          >
-          </CardBackLeftRight>
-        </a-flex>
+        <div :id="`chu_${realPlayerStore.getRealPlayerLeft.id}`">
+          <a-flex v-for="item in lodash.chunk(realPlayerStore.getRealPlayerLeft.cardsPlayed,14)" justify="flex-start"
+                  align="flex-start"
+                  wrap="wrap" style="margin: 5px" :vertical="true">
+            出：
+            <CardBackLeftRight v-for="(card,index) in item" :key="index" :card-number="card"
+                               style="margin-top: 2px"
+                               :card-type="getCardType(card)"
+            >
+            </CardBackLeftRight>
+          </a-flex>
+        </div>
       </a-flex>
       <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px" v-if="isDebugger"
               :vertical="true">
@@ -581,16 +592,17 @@ function getStyle(item: number) {
             </NoHoverCard>
           </a-flex>
         </a-flex>
-        <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px">
-          出：
-          <NoHoverCard v-for="(card,index) in realPlayerStore.getRealPlayerOn.cardsPlayed" :key="index"
-                       :card-number="card"
-                       style="margin-left: 2px"
-                       :card-type="getCardType(card)"
-                       :class="index===realPlayerStore.getRealPlayerOn.cardsPlayed.length-1?'animate__animated animate__bounce':''"
-          >
-          </NoHoverCard>
-        </a-flex>
+        <div :id="`chu_${realPlayerStore.getRealPlayerOn.id}`">
+          <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px">
+            出：
+            <NoHoverCard v-for="(card,index) in realPlayerStore.getRealPlayerOn.cardsPlayed" :key="index"
+                         :card-number="card"
+                         style="margin-left: 2px"
+                         :card-type="getCardType(card)"
+            >
+            </NoHoverCard>
+          </a-flex>
+        </div>
         <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px" v-if="isDebugger">
           听：
           <NoHoverCard v-for="(card,index2) in realPlayerStore.getRealPlayerOn.tingCard" :key="index2"
@@ -607,17 +619,18 @@ function getStyle(item: number) {
         <CardCounter></CardCounter>
       </div>
       <!--玩家-->
-      <div>
-        <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px">
-          出：
-          <NoHoverCard v-for="(card,index) in realPlayerStore.getRealPlayer.cardsPlayed" :key="index"
-                       :card-number="card"
-                       style="margin-left: 2px"
-                       :card-type="getCardType(card)"
-                       :class="index===realPlayerStore.getRealPlayer.cardsPlayed.length-1?'animate__animated animate__bounce':''"
-          >
-          </NoHoverCard>
-        </a-flex>
+      <div >
+        <div :id="`chu_${realPlayerStore.getRealPlayer.id}`">
+          <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px" >
+            出：
+            <NoHoverCard v-for="(card,index) in realPlayerStore.getRealPlayer.cardsPlayed" :key="index"
+                         :card-number="card"
+                         style="margin-left: 2px"
+                         :card-type="getCardType(card)"
+            >
+            </NoHoverCard>
+          </a-flex>
+        </div>
         <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px">
           听：
           <NoHoverCard v-for="(card,index2) in realPlayerStore.getRealPlayer.tingCard" :key="index2" :card-number="card"
@@ -690,16 +703,17 @@ function getStyle(item: number) {
         </CardBackLeftRight>
       </a-flex>
       <a-flex justify="space-between" align="center" :vertical="true">
-        <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px" :vertical="true">
-          出：
-          <CardBackLeftRight v-for="(card,index) in realPlayerStore.getRealPlayerRight.cardsPlayed" :key="index"
-                             :card-number="card"
-                             style="margin-top: 2px"
-                             :card-type="getCardType(card)"
-                             :class="index===realPlayerStore.getRealPlayerRight.cardsPlayed.length-1?'animate__animated animate__bounce':''"
-          >
-          </CardBackLeftRight>
-        </a-flex>
+        <div :id="`chu_${realPlayerStore.getRealPlayerRight.id}`">
+          <a-flex justify="flex-start" align="flex-start" wrap="wrap" style="margin: 5px" :vertical="true">
+            出：
+            <CardBackLeftRight v-for="(card,index) in realPlayerStore.getRealPlayerRight.cardsPlayed" :key="index"
+                               :card-number="card"
+                               style="margin-top: 2px"
+                               :card-type="getCardType(card)"
+            >
+            </CardBackLeftRight>
+          </a-flex>
+        </div>
       </a-flex>
       <a-flex justify="space-between" align="center" :vertical="true">
         <!--碰牌-->
