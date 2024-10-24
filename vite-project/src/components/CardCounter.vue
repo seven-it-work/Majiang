@@ -20,6 +20,8 @@ function getHavePlayedCard(card: number): number {
     allPlayedCard.push(...p.gangs.flatMap(temp => temp.singGangs))
     allPlayedCard.push(...p.pengs.flatMap(temp => temp.singPengs))
   })
+  // 自身手牌收集
+  allPlayedCard.push(...realPlayerStore.getRealPlayer.shoupai)
   const count = new Map<number, number>();
   for (let i = 0; i < allPlayedCard.length; i++) {
     count.set(allPlayedCard[i], (count.get(allPlayedCard[i]) || 0) + 1);

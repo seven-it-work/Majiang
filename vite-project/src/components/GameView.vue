@@ -616,7 +616,6 @@ function getStyle(item: number) {
         </a-flex>
       </div>
       <div style="height: 400px">
-        <div>todo 记牌器要包含自己的牌</div>
         <div>剩余牌：{{ realPlayerStore.getGameInformation.getNumberOfCardsRemaining() }}</div>
         <CardCounter></CardCounter>
       </div>
