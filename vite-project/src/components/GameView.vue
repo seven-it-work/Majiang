@@ -124,6 +124,9 @@ const confirmWithPromise = (options: any): Promise<boolean> => {
 
 function currentNextMove() {
   console.log("该下一个人了")
+  if (realPlayerStore.getGameInformation.isNoCard()){
+    debugger
+  }
   // 判断是否只有一人没有胡牌了
   if (realPlayerStore.getPlayerList.filter(item => !item.isHupai).length > 1) {
     currentPlayerIndex.value += 1;
@@ -342,6 +345,7 @@ async function discardCard(dealer: Player, card: number): Promise<boolean> {
         return true;
       }
     } else {
+      debugger
       // 这里可能要采用弹窗形式去阻塞了
       console.log("玩家是否需要杠牌")
       // 移除出牌人的出牌数据
